@@ -1,1 +1,15 @@
-{"trades": []}
+{
+  "trades": [],
+  "detailed_trades": [
+    {
+      "action": "BUY",
+      "amount": 1000.0,
+      "entry_price": 69000.0,
+      "exit_price": null,
+      "status": "open",
+      "timestamp": "2026-04-06T12:01:29.954Z",
+      "pnl": 0.0,
+      "id": "4ee32369-25da-4bb9-8ad0-3748007ea1dd"
+    }
+  ]
+}

@@ -24,7 +24,7 @@ class AgentSigner:
         domain_data = {
             "name": "MacroSentry-Agent",
             "version": "1",
-            "chainId": 8453,  # Example: Base L2
+            "chainId": 11155111,  # Sepolia testnet (matches frontend)
             "verifyingContract": "0x..." # Hackathon Risk Router
         }
 

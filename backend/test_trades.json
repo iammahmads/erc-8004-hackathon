@@ -1,0 +1,45 @@
+{
+  "trades": [],
+  "detailed_trades": [
+    {
+      "action": "BUY",
+      "amount": 0.5,
+      "entry_price": 45000,
+      "exit_price": 47000,
+      "status": "closed",
+      "timestamp": "2026-04-03T05:52:36.234291",
+      "pnl": 1500,
+      "id": "df769e8a-2f94-453e-8e10-bf4a205cb7e0"
+    },
+    {
+      "action": "BUY",
+      "amount": 0.7,
+      "entry_price": 47000,
+      "exit_price": 48000,
+      "status": "closed",
+      "timestamp": "2026-04-01T05:52:36.234555",
+      "pnl": 700,
+      "id": "4d334af3-fc13-4ad5-a9db-e7b52ae8a1ac"
+    },
+    {
+      "action": "SELL",
+      "amount": 0.8,
+      "entry_price": 48000,
+      "exit_price": 49000,
+      "status": "closed",
+      "timestamp": "2026-03-31T05:52:36.234670",
+      "pnl": -350,
+      "id": "f33e76c3-68ac-4127-947e-3fcf0de022c9"
+    },
+    {
+      "action": "BUY",
+      "amount": 0.9,
+      "entry_price": 49000,
+      "exit_price": 50000,
+      "status": "closed",
+      "timestamp": "2026-03-30T05:52:36.234792",
+      "pnl": 900,
+      "id": "d278eb9b-842e-4a44-b536-ac9a21599849"
+    }
+  ]
+}

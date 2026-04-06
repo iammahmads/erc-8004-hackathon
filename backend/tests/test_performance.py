@@ -12,9 +12,9 @@ def test_log_and_metrics(tmp_path):
     tracker.log_trade(0.2, 99.7)
     metrics = tracker.get_metrics()
     assert isinstance(metrics, dict)
-    assert "sharpe" in metrics and isinstance(metrics["sharpe"], float)
-    assert "drawdown" in metrics and isinstance(metrics["drawdown"], float)
-    assert "returns" in metrics and abs(metrics["returns"] - 0.7) < 1e-6
+    assert "sharpe_ratio" in metrics and isinstance(metrics["sharpe_ratio"], float)
+    assert "max_drawdown" in metrics and isinstance(metrics["max_drawdown"], float)
+    assert "total_return" in metrics and abs(metrics["total_return"] - 0.7) < 1e-6
 
 def test_type_safety():
     tracker = PerformanceTracker("test_perf.json")
