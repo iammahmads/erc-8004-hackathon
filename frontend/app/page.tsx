@@ -9,7 +9,8 @@ import { LoadingState, ErrorState, EmptyState } from '@/components/ui/loading';
 import { RefreshCw, CheckCircle, AlertCircle, ExternalLink, Bot, Zap } from 'lucide-react';
 import * as api from '@/lib/api';
 
-const AGENT_ADDRESS = '0x0740DeB986e2C7B7D4b4F3Aa4C2875a411380485';
+const AGENT_ADDRESS =
+  process.env.NEXT_PUBLIC_AGENT_ADDRESS || '0x0740DeB986e2C7B7D4b4F3Aa4C2875a411380485';
 
 export default function Home() {
   const { data: metrics, loading: metricsLoading, error: metricsError, refetch: refetchMetrics } = useMetrics();

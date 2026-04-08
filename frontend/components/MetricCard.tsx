@@ -114,7 +114,7 @@ export function SignalWidget({ symbol, sentiment, volatility, price, className }
 }
 
 interface RiskModeBadgeProps {
-  mode: 'conservative' | 'moderate' | 'aggressive';
+  mode: 'conservative' | 'moderate' | 'aggressive' | 'normal' | 'protection';
 }
 
 export function RiskModeBadge({ mode }: RiskModeBadgeProps) {
@@ -122,11 +122,16 @@ export function RiskModeBadge({ mode }: RiskModeBadgeProps) {
     conservative: 'bg-blue-900/30 text-blue-300 border-blue-800',
     moderate: 'bg-yellow-900/30 text-yellow-300 border-yellow-800',
     aggressive: 'bg-red-900/30 text-red-300 border-red-800',
+    normal: 'bg-yellow-900/30 text-yellow-300 border-yellow-800',
+    protection: 'bg-blue-900/30 text-blue-300 border-blue-800',
   };
 
   return (
     <div
-      className={cn('inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm font-medium', colors[mode])}
+      className={cn(
+        'inline-flex items-center gap-2 rounded-lg border px-3 py-1.5 text-sm font-medium',
+        colors[mode] ?? colors.moderate
+      )}
     >
       <Zap className="h-4 w-4" />
       {mode.charAt(0).toUpperCase() + mode.slice(1)}

@@ -105,7 +105,18 @@ async def decide_trade():
 
 # --- Phase 3: Trust Layer (ERC-8004 Integration) ---
 from core.signer import AgentSigner
-signer = AgentSigner()
+import os
+import hashlib
+
+
+def _get_signer() -> AgentSigner:
+    """
+    Lazy-load signer so the server can start in paper/demo mode without keys.
+    """
+    try:
+        return AgentSigner()
+    except Exception as e:
+        raise HTTPException(status_code=503, detail=f"Signing not configured: {e}")
 
 @app.post("/sign_intent")
 async def sign_intent(
@@ -116,6 +127,7 @@ async def sign_intent(
     """
     Receives trade intent and returns EIP-712 signature (Validation Artifact).
     """
+    signer = _get_signer()
     signature = signer.sign_trade_intent(action, amount, reasoning)
     return {
         "action": action,
@@ -334,6 +346,7 @@ async def auto_trade():
 
     # Step 4: Sign intent (EIP-712)
     try:
+        signer = _get_signer()
         signature = signer.sign_trade_intent(action, position_size, decision.get("reasoning", ""))
         pipeline_result["signature"] = signature
     except Exception as e:
@@ -353,6 +366,29 @@ async def auto_trade():
     pipeline_result["order_id"] = order_id
     pipeline_result["mode"] = mode
 
+    # Step 5.5: Optionally post an ERC-8004 validation artifact
+    # Safe-by-default: only when ONCHAIN_MODE=on and contract is configured.
+    onchain_mode = os.getenv("ONCHAIN_MODE", "off").lower() in ("1", "true", "on", "yes")
+    if onchain_mode:
+        try:
+            # Reuse the existing root endpoint implementation.
+            from core.contract_api import post_artifact as post_artifact_fn
+
+            reasoning = decision.get("reasoning", "")
+            reasoning_hash = "0x" + hashlib.sha256(reasoning.encode("utf-8")).hexdigest()
+
+            artifact_tx_hash = post_artifact_fn(
+                action=action,
+                amount=str(position_size),
+                reasoning_hash=reasoning_hash,
+                txId=str(order_id),
+                compliant=True,
+            ).get("tx_hash")
+            pipeline_result["artifact_tx_hash"] = artifact_tx_hash
+        except Exception as e:
+            # Do not fail the entire pipeline for artifact issues in demo environments.
+            pipeline_result["artifact_error"] = str(e)
+
     # Step 6: Log trade
     entry_price = btc_signal.get("price") or 65000.0
     trade_data = {
@@ -365,6 +401,7 @@ async def auto_trade():
         "order_id": order_id,
         "mode": mode,
         "reasoning": decision.get("reasoning", ""),
+        "artifact_tx_hash": pipeline_result.get("artifact_tx_hash"),
     }
     trade_id = perf.add_trade(trade_data)
     pipeline_result["trade_id"] = trade_id

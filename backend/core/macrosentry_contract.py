@@ -16,13 +16,15 @@ class MacroSentryContract:
         self.account = Account.from_key(private_key)
 
     def register_agent(self, agent_address: str = None) -> str:
-        from_address = agent_address if agent_address else self.account.address
-        tx = self.contract.functions.registerAgent().build_transaction({
-            'from': from_address,
-            'nonce': self.web3.eth.get_transaction_count(self.account.address),
-            'gas': 300000,
-            'gasPrice': self.web3.eth.gas_price
-        })
+        # Transactions must be sent/signed by the configured private key account.
+        tx = self.contract.functions.registerAgent().build_transaction(
+            {
+                "from": self.account.address,
+                "nonce": self.web3.eth.get_transaction_count(self.account.address),
+                "gas": 300000,
+                "gasPrice": self.web3.eth.gas_price,
+            }
+        )
         signed = self.account.sign_transaction(tx)
         tx_hash = self.web3.eth.send_raw_transaction(signed.raw_transaction)
         return self.web3.to_hex(tx_hash)
@@ -37,7 +39,7 @@ class MacroSentryContract:
             'gasPrice': self.web3.eth.gas_price
         })
         signed = self.account.sign_transaction(tx)
-        tx_hash = self.web3.eth.send_raw_transaction(signed.rawTransaction)
+        tx_hash = self.web3.eth.send_raw_transaction(signed.raw_transaction)
         return self.web3.to_hex(tx_hash)
 
     def get_reputation(self, agent_address: str) -> int:

@@ -25,7 +25,8 @@ export interface TradeDecision {
   macro: MacroSignal;
   spx: MacroSignal;
   btc_signal: MacroSignal;
-  risk_mode: "conservative" | "moderate" | "aggressive";
+  // Backend may return different labels; keep the UI resilient.
+  risk_mode: "conservative" | "moderate" | "aggressive" | "normal" | "protection";
   llm_decision: LLMDecision;
   timestamp?: string;
 }
